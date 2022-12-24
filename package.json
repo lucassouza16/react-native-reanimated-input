@@ -1,0 +1,17 @@
+{
+  "name": "react-native-reanimated-textinput",
+  "version": "1.0.0",
+  "description": "React Native TextInput with fixed bugs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": "Lucas Souza",
+  "license": "M.I.T",
+  "peerDependencies": {
+    "react-native": "^0.41.2"
+  }
+}

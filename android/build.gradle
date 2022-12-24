@@ -1,0 +1,39 @@
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 31
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+dependencies {
+    implementation "com.facebook.react:react-native:+"
+    implementation 'com.google.android.material:material:1.0.0'
+}
+  
