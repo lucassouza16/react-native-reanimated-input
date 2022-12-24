@@ -110,6 +110,9 @@ public class ReactEditText extends AppCompatEditText
   private int mFontStyle = ReactTypefaceUtils.UNSET;
   private boolean mAutoFocus = false;
   private boolean mDidAttachToWindow = false;
+  private float pX = 0;
+  private float pY = 0;
+  private boolean mAllowScrollFromParent = false;
 
   private ReactViewBackgroundManager mReactBackgroundManager;
 
@@ -200,22 +203,33 @@ public class ReactEditText extends AppCompatEditText
   public boolean onTouchEvent(MotionEvent ev) {
     switch (ev.getAction()) {
       case MotionEvent.ACTION_DOWN:
-        mDetectScrollMovement = true;
-        // Disallow parent views to intercept touch events, until we can detect if we should be
-        // capturing these touches or not.
         this.getParent().requestDisallowInterceptTouchEvent(true);
+        pX = ev.getX();
+        pY = ev.getY();
         break;
       case MotionEvent.ACTION_MOVE:
-        if (mDetectScrollMovement) {
-          if (!canScrollVertically(-1)
-              && !canScrollVertically(1)
-              && !canScrollHorizontally(-1)
-              && !canScrollHorizontally(1)) {
-            // We cannot scroll, let parent views take care of these touches.
-            this.getParent().requestDisallowInterceptTouchEvent(false);
-          }
-          mDetectScrollMovement = false;
+        if (!mDetectScrollMovement) {
+          mDetectScrollMovement = true;
+
+          int mX = Math.round(ev.getX() - pX);
+          int mY = Math.round(ev.getY() - pY);
+
+          int posX = mX < 0 ? mX * -1 : mX;
+          int posY = mY < 0 ? mY * -1 : mY;
+
+          boolean canScrollHorizontal = posX > posY && canScrollHorizontally(posX);
+          boolean canScrollVertical = posY > posX && canScrollVertically(posY);
+
+          mAllowScrollFromParent = !canScrollHorizontal && !canScrollVertical;
         }
+        if (mAllowScrollFromParent) {
+          this.getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        break;
+      case MotionEvent.ACTION_UP:
+      case MotionEvent.ACTION_CANCEL:
+        mAllowScrollFromParent = false;
+        mDetectScrollMovement = false;
         break;
     }
     return super.onTouchEvent(ev);
