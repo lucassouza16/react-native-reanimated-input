@@ -211,14 +211,14 @@ public class ReactEditText extends AppCompatEditText
         if (!mDetectScrollMovement) {
           mDetectScrollMovement = true;
 
-          int mX = Math.round(ev.getX() - pX);
-          int mY = Math.round(ev.getY() - pY);
+          int mX = Math.round(ev.getX() - pX) * -1;
+          int mY = Math.round(ev.getY() - pY) * -1;
 
           int posX = mX < 0 ? mX * -1 : mX;
           int posY = mY < 0 ? mY * -1 : mY;
 
-          boolean canScrollHorizontal = posX > posY && canScrollHorizontally(posX);
-          boolean canScrollVertical = posY > posX && canScrollVertically(posY);
+          boolean canScrollHorizontal = posX > posY && canScrollHorizontally(mX);
+          boolean canScrollVertical = posY > posX && canScrollVertically(mY);
 
           mAllowScrollFromParent = !canScrollHorizontal && !canScrollVertical;
         }
